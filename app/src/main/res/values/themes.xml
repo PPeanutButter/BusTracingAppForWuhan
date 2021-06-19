@@ -1,0 +1,26 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Theme.武汉实时公交花生酱" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">#7367EF</item>
+        <item name="colorPrimaryVariant">#7367EF</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">#8A80ED</item>
+        <item name="colorSecondaryVariant">#8A80ED</item>
+        <item name="colorOnSecondary">@color/white</item>
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor" tools:targetApi="l">#00000000</item>
+        <!-- Customize your theme here. -->
+        <item name="md_corner_radius">16dp</item>
+    </style>
+
+    <style name="Theme.武汉实时公交花生酱.NoActionBar" parent="Theme.武汉实时公交花生酱">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="Theme.武汉实时公交花生酱.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="Theme.武汉实时公交花生酱.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+</resources>
