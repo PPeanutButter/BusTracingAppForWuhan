@@ -15,12 +15,4 @@
         <item name="md_corner_radius">16dp</item>
     </style>
 
-    <style name="Theme.武汉实时公交花生酱.NoActionBar" parent="Theme.武汉实时公交花生酱">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-    </style>
-
-    <style name="Theme.武汉实时公交花生酱.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
-
-    <style name="Theme.武汉实时公交花生酱.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>

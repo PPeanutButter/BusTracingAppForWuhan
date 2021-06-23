@@ -27,7 +27,6 @@ class MainActivity : AppCompatActivity() {
             val key = binding.editTextTextPersonName.text.toString()
             doSearch(key) {
                 try {
-                    Log.v("json", it.toString(4))
                     val lines = it.getJSONObject("data").getJSONArray("lines")
                     binding.result.removeAllViews()
                     for (idx in 0 until lines.length()) {
@@ -42,9 +41,7 @@ class MainActivity : AppCompatActivity() {
                         val item = buildResultItem(lineName, "$startStopName - $endStopName")
                         item.setOnClickListener {
                             startActivity(Intent(this,DetailActivity::class.java).also { intent->
-                                intent.putExtra("lineName",lineName)
                                 intent.putExtra("lineId",lineId)
-                                intent.putExtra("endStopName",endStopName)
                             })
                         }
                         binding.result.addView(item)

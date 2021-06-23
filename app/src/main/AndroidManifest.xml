@@ -4,6 +4,8 @@
     package="com.peanut.gd.wuhanbus">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.INSTALL_SHORTCUT" />
+    <uses-permission android:name="android.permission.UNINSTALL_SHORTCUT" />
 
     <application
         android:allowBackup="true"
@@ -16,9 +18,10 @@
         tools:ignore="UnusedAttribute">
         <activity
             android:name=".DetailActivity"
-            android:label="@string/title_activity_detail"
-            android:theme="@style/Theme.武汉实时公交花生酱.NoActionBar"/>
-        <activity android:name=".MainActivity">
+            android:screenOrientation="landscape"
+            tools:ignore="LockedOrientationActivity"/>
+        <activity android:name=".MainActivity" android:screenOrientation="landscape"
+            tools:ignore="LockedOrientationActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
