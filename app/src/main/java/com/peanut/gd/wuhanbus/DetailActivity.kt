@@ -36,20 +36,24 @@ class DetailActivity : AppCompatActivity() {
         window.statusBarColor = Color.TRANSPARENT
         window.decorView.systemUiVisibility =
             View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-        val lineId = intent.getStringExtra("lineId")?:""
+        val lineId = intent.getStringExtra("lineId") ?: ""
         loadLine(lineId)
     }
 
     @SuppressLint("UseCompatLoadingForDrawables")
-    private fun loadLine(lineId: String = line){
+    private fun loadLine(lineId: String = line) {
         val route = binding.route
         line = lineId
-        doSearch(lineId = lineId){
+        doSearch(lineId = lineId) {
             try {
                 val data = it.getJSONObject("data")
-                binding.endStation.text = String.format("往%s方向",data.getString("endStopName"))
-                binding.endTime.text = String.format("%s - %s",data.getString("firstTime"), data.getString("lastTime"))
-                binding.bus.text = String.format("%s路:",data.getString("lineName"))
+                binding.endStation.text = String.format("%s路: 往%s方向", data.getString("lineName"), data.getString("endStopName"))
+                binding.endTime.text = String.format(
+                    "%s  %s - %s",
+                    data.getString("price"),
+                    data.getString("firstTime"),
+                    data.getString("lastTime")
+                )
                 binding.refresh.setOnClickListener {
                     loadLine(lineId)
                 }
@@ -57,20 +61,24 @@ class DetailActivity : AppCompatActivity() {
                     val line2Id = data.getString("line2Id")
                     if (line2Id.isNotEmpty())
                         loadLine(line2Id)
-                    else Toast.makeText(this,"该线路无返程哦",Toast.LENGTH_SHORT).show()
+                    else Toast.makeText(this, "该线路无返程哦", Toast.LENGTH_SHORT).show()
                 }
                 binding.createShortCut.setOnClickListener {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                        addShortCut(this,lineId,data.getString("lineName")+" - "+data.getString("endStopName"))
-                        Toast.makeText(this,"已提交创建快捷方式请求~",Toast.LENGTH_SHORT).show()
-                    }else{
-                        Toast.makeText(this,"暂不支持Android 8以下创建快捷方式",Toast.LENGTH_SHORT).show()
+                        addShortCut(
+                            this,
+                            lineId,
+                            data.getString("lineName") + " - " + data.getString("endStopName")
+                        )
+                        Toast.makeText(this, "已提交创建快捷方式请求~", Toast.LENGTH_SHORT).show()
+                    } else {
+                        Toast.makeText(this, "暂不支持Android 8以下创建快捷方式", Toast.LENGTH_SHORT).show()
                     }
                 }
                 val lines = data.getJSONArray("stops")
                 val buses = data.getJSONArray("buses")
                 route.removeAllViews()
-                val state = mutableListOf<Pair<Int,Boolean>>()
+                val state = mutableListOf<Pair<Int, Boolean>>()
                 for (idx in 0 until buses.length()) {
                     val station = buses.getString(idx).split("|")
                     state.add(station[2].toInt() to (station[3] == "1"))
@@ -80,14 +88,14 @@ class DetailActivity : AppCompatActivity() {
                     val station = lines.getJSONObject(idx)
                     val stopName = station.getString("stopName")
                     val stopId = station.getString("stopId")
-                    val item = buildRouteItem(stopName,stopId,stopId in startedStation)
+                    val item = buildRouteItem(stopName, stopId, stopId in startedStation)
                     route.addView(item)
                 }
-                for (bus in state){
-                    val view = route.getChildAt(bus.first-1)
+                for (bus in state) {
+                    val view = route.getChildAt(bus.first - 1)
                     val busIcon = view.findViewById<ImageView>(R.id.imageView4)
                     busIcon.visibility = View.VISIBLE
-                    if (bus.second.not()){
+                    if (bus.second.not()) {
                         busIcon.setImageDrawable(resources.getDrawable(R.drawable.ic_round_directions_bus_24))
                         val a = busIcon.layoutParams as ConstraintLayout.LayoutParams
                         a.startToStart = 0
@@ -101,7 +109,7 @@ class DetailActivity : AppCompatActivity() {
                     a.startToStart = R.id.imageView3
                     line.layoutParams = a
                 }
-                route.getChildAt(route.childCount-1).apply {
+                route.getChildAt(route.childCount - 1).apply {
                     val line = this.findViewById<ImageView>(R.id.imageView2)
                     val a = line.layoutParams as ConstraintLayout.LayoutParams
                     a.endToEnd = R.id.imageView3
@@ -114,10 +122,11 @@ class DetailActivity : AppCompatActivity() {
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun addShortCut(context: Context, busId: String, label:String) {
+    fun addShortCut(context: Context, busId: String, label: String) {
         val shortcutManager = context.getSystemService(Context.SHORTCUT_SERVICE) as ShortcutManager
         if (shortcutManager.isRequestPinShortcutSupported) {
-            val shortcutInfoIntent = Intent(context, DetailActivity::class.java).apply { this.putExtra("lineId",busId) }
+            val shortcutInfoIntent =
+                Intent(context, DetailActivity::class.java).apply { this.putExtra("lineId", busId) }
             shortcutInfoIntent.action = Intent.ACTION_VIEW
             val info: ShortcutInfo = ShortcutInfo.Builder(context, busId)
                 .setIcon(Icon.createWithResource(context, R.mipmap.ic_launcher))
@@ -161,7 +170,7 @@ class DetailActivity : AppCompatActivity() {
         }
     }
 
-    private fun buildRouteItem(stationName:String,stopId:String,started:Boolean):View{
+    private fun buildRouteItem(stationName: String, stopId: String, started: Boolean): View {
         val view = this.layoutInflater.inflate(R.layout.station, null)
         view.findViewById<TextView>(R.id.station_name).apply {
             this.text = ("$stationName${if (started) "★" else ""}").toCharArray().joinToString("\n")
@@ -169,14 +178,14 @@ class DetailActivity : AppCompatActivity() {
                 this.setTextColor(Color.parseColor("#7367EF"))
             this.setOnClickListener {
                 MIUIDialog(this@DetailActivity).show {
-                    title(text="设为常用站")
+                    title(text = "设为常用站")
                     message(text = "收藏后,${stationName}将高亮显示以方便您查找")
-                    positiveButton(text="收藏"){
-                        SettingManager.plus(key = "StartedStation",stopId)
+                    positiveButton(text = "收藏") {
+                        SettingManager.plus(key = "StartedStation", stopId)
                         loadLine()
                     }
-                    negativeButton(text = "移除"){
-                        SettingManager.remove(key = "StartedStation",stopId)
+                    negativeButton(text = "移除") {
+                        SettingManager.remove(key = "StartedStation", stopId)
                         loadLine()
                     }
                 }
