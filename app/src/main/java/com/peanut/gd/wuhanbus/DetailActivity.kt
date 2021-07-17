@@ -53,7 +53,6 @@ class DetailActivity : AppCompatActivity() {
         doSearch(lineId = lineId) {
             try {
                 val data = it.getJSONObject("data")
-                println(data.toString(4))
                 binding.endStation.text = String.format("%s路: 往%s方向", data.getString("lineName"), data.getString("endStopName"))
                 binding.endTime.text = String.format(
                     "%s  %s - %s",
@@ -115,6 +114,7 @@ class DetailActivity : AppCompatActivity() {
                     if (i == traceIndex){
                         //set background
                         busIcon.setBackgroundResource(R.drawable.traced_bus)
+                        busIcon.setImageDrawable(resources.getDrawable(R.drawable.ic_round_directions_bus_fff_24))
                     }
                     busIcon.setOnClickListener {
                         try {
@@ -165,33 +165,44 @@ class DetailActivity : AppCompatActivity() {
     }
 
     private fun doSearch(lineId: String, func: (JSONObject) -> Unit) {
+        var retry = 5
+        var success = false
         val dialog = MIUIDialog(this).show {
             progress(text = "正在查询公交位置...")
             cancelable = false
             cancelOnTouchOutside = false
         }
         thread {
-            try {
-                val host =
-                    "http://bus.wuhancloud.cn:9087/website//web/420100/line/${lineId}.do?Type=LineDetail"
-                Http().apply {
-                    this.setGet(host)
-                    this.run()
-                    val body = this.body
-                    Handler(this@DetailActivity.mainLooper).post {
-                        dialog.cancel()
-                        func.invoke(JSONObject(body ?: "{}"))
+            while (retry > 0 && success.not()) {
+                try {
+                    val host =
+                        "http://bus.wuhancloud.cn:9087/website//web/420100/line/${lineId}.do?Type=LineDetail"
+                    Http().apply {
+                        this.setGet(host)
+                        this.run()
+                        val body = this.body
+                        Handler(this@DetailActivity.mainLooper).post {
+                            success = true
+                            dialog.cancel()
+                            func.invoke(JSONObject(body ?: "{}"))
+                        }
                     }
-                }
-            } catch (e: Exception) {
-                e.printStackTrace()
-                Handler(this@DetailActivity.mainLooper).post {
-                    dialog.cancel()
-                    MIUIDialog(this).show {
-                        title(text = "失败")
-                        message(text = e.localizedMessage)
-                    }
-                    func.invoke(JSONObject("{}"))
+                } catch (e: Exception) {
+                    retry--
+                    e.printStackTrace()
+                    if (retry == 0)
+                        Handler(this@DetailActivity.mainLooper).post {
+                            dialog.cancel()
+                            MIUIDialog(this).show {
+                                title(text = "失败")
+                                message(text = e.localizedMessage)
+                            }
+                            func.invoke(JSONObject("{}"))
+                        }
+                    else
+                        Handler(this@DetailActivity.mainLooper).post {
+                            dialog.setProgressText("第${6-retry}次查询公交位置...")
+                        }
                 }
             }
         }
@@ -202,7 +213,7 @@ class DetailActivity : AppCompatActivity() {
         view.findViewById<TextView>(R.id.station_name).apply {
             this.text = ("$stationName${if (started) "★" else ""}").toCharArray().joinToString("\n")
             if (started)
-                this.setTextColor(Color.parseColor("#7367EF"))
+                this.setTextColor(resources.getColor(R.color.primary))
             this.setOnClickListener {
                 MIUIDialog(this@DetailActivity).show {
                     title(text = "设为常用站")

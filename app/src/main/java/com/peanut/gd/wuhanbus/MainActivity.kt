@@ -35,9 +35,6 @@ class MainActivity : AppCompatActivity() {
                         val lineId = line.getString("lineId")
                         val startStopName = line.getString("startStopName")
                         val endStopName = line.getString("endStopName")
-//                        val firstTime = line.getString("firstTime")
-//                        val lastTime = line.getString("lastTime")
-//                        val price = line.getString("price")
                         val item = buildResultItem(lineName, "$startStopName - $endStopName")
                         item.setOnClickListener {
                             startActivity(Intent(this,DetailActivity::class.java).also { intent->
@@ -61,33 +58,44 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun doSearch(search: String, func: (JSONObject) -> Unit) {
+        var retry = 5
+        var success = false
         val dialog = MIUIDialog(this).show {
             progress(text = "正在查询${search}的线路图...")
             cancelable = false
             cancelOnTouchOutside = false
         }
         thread {
-            try {
-                val host =
-                    "http://bus.wuhancloud.cn:9087/website//web/420100/search.do?keyword=$search&type=line"
-                Http().apply {
-                    this.setGet(host)
-                    this.run()
-                    val body = this.body
-                    Handler(this@MainActivity.mainLooper).post {
-                        dialog.cancel()
-                        func.invoke(JSONObject(body ?: "{}"))
+            while (retry > 0 && success.not()) {
+                try {
+                    val host =
+                        "http://bus.wuhancloud.cn:9087/website//web/420100/search.do?keyword=$search&type=line"
+                    Http().apply {
+                        this.setGet(host)
+                        this.run()
+                        val body = this.body
+                        Handler(this@MainActivity.mainLooper).post {
+                            success = true
+                            dialog.cancel()
+                            func.invoke(JSONObject(body ?: "{}"))
+                        }
                     }
-                }
-            } catch (e: Exception) {
-                e.printStackTrace()
-                Handler(this@MainActivity.mainLooper).post {
-                    dialog.cancel()
-                    MIUIDialog(this).show {
-                        title(text = "失败")
-                        message(text = e.localizedMessage)
-                    }
-                    func.invoke(JSONObject("{}"))
+                } catch (e: Exception) {
+                    retry--
+                    e.printStackTrace()
+                    if (retry == 0)
+                        Handler(this@MainActivity.mainLooper).post {
+                            dialog.cancel()
+                            MIUIDialog(this).show {
+                                title(text = "失败")
+                                message(text = e.localizedMessage)
+                            }
+                            func.invoke(JSONObject("{}"))
+                        }
+                    else
+                        Handler(this@MainActivity.mainLooper).post {
+                            dialog.setProgressText("第${6-retry}次查询${search}的线路图...")
+                        }
                 }
             }
         }

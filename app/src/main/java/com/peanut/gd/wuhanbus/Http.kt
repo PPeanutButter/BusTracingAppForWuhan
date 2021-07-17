@@ -27,7 +27,7 @@ class Http {
     private var isCookieEnabled = true
     private var urlClient: URLClient? = null
     private val client: OkHttpClient.Builder =
-        OkHttpClient.Builder().connectTimeout(10L, TimeUnit.SECONDS)
+        OkHttpClient.Builder().connectTimeout(3L, TimeUnit.SECONDS)
 
     fun setCookieEnabled(cookieEnabled: Boolean): Http {
         isCookieEnabled = cookieEnabled
