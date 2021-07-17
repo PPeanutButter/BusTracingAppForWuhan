@@ -35,9 +35,9 @@ class MainActivity : AppCompatActivity() {
                         val lineId = line.getString("lineId")
                         val startStopName = line.getString("startStopName")
                         val endStopName = line.getString("endStopName")
-                        val firstTime = line.getString("firstTime")
-                        val lastTime = line.getString("lastTime")
-                        val price = line.getString("price")
+//                        val firstTime = line.getString("firstTime")
+//                        val lastTime = line.getString("lastTime")
+//                        val price = line.getString("price")
                         val item = buildResultItem(lineName, "$startStopName - $endStopName")
                         item.setOnClickListener {
                             startActivity(Intent(this,DetailActivity::class.java).also { intent->
