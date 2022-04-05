@@ -199,7 +199,7 @@ class DetailActivity : AppCompatActivity() {
                 Intent(context, DetailActivity::class.java).apply { this.putExtra("lineId", busId) }
             shortcutInfoIntent.action = Intent.ACTION_VIEW
             val info: ShortcutInfo = ShortcutInfo.Builder(context, busId)
-                .setIcon(Icon.createWithResource(context, R.mipmap.ic_launcher))
+                .setIcon(Icon.createWithResource(context, R.mipmap.icon))
                 .setShortLabel(label)
                 .setIntent(shortcutInfoIntent)
                 .build()
