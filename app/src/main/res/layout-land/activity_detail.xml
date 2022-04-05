@@ -26,7 +26,6 @@
         android:layout_height="30dp"
         android:layout_marginTop="24dp"
         android:layout_marginEnd="16dp"
-        android:rotation="90"
         app:layout_constraintBottom_toBottomOf="@+id/textView3"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -36,9 +35,9 @@
         android:id="@+id/linearLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:gravity="end"
+        android:layout_marginEnd="16dp"
         android:orientation="vertical"
+        android:gravity="end"
         app:layout_constraintBottom_toBottomOf="@+id/imageView5"
         app:layout_constraintEnd_toStartOf="@+id/imageView5"
         app:layout_constraintTop_toTopOf="@+id/imageView5">
@@ -48,7 +47,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/white"
-            android:textSize="14sp"
+            android:textSize="24sp"
             app:layout_constraintEnd_toStartOf="@+id/imageView5"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -57,7 +56,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/white"
-            android:textSize="8sp"
             app:layout_constraintEnd_toEndOf="@+id/end_station"
             app:layout_constraintTop_toBottomOf="@+id/end_station" />
 
@@ -71,29 +69,29 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView3">
-        <ScrollView
+        <HorizontalScrollView
             android:scrollbars="none"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-
             <LinearLayout
                 android:id="@+id/route"
+                android:paddingBottom="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
                 android:paddingEnd="10dp"
-                android:paddingBottom="10dp"
+                android:orientation="horizontal"
                 tools:ignore="RtlSymmetry" />
-        </ScrollView>
+        </HorizontalScrollView>
     </ScrollView>
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="60dp"
         android:background="#00ffffff"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="@+id/imageView5"
+        app:layout_constraintEnd_toStartOf="@+id/linearLayout"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/imageView5">
 

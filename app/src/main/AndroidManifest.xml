@@ -16,7 +16,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.武汉实时公交花生酱"
         tools:ignore="UnusedAttribute">
-        <activity android:name=".TraceActivity" android:label="查看实时位置">
+        <activity android:name=".TraceActivity" android:label="查看实时位置"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -28,14 +29,12 @@
                     android:scheme="peanut" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".DetailActivity"
-            android:screenOrientation="landscape"
-            tools:ignore="LockedOrientationActivity" />
+        <activity android:name=".DetailActivity"/>
         <activity
             android:name=".MainActivity"
             android:screenOrientation="portrait"
-            tools:ignore="LockedOrientationActivity">
+            tools:ignore="LockedOrientationActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
