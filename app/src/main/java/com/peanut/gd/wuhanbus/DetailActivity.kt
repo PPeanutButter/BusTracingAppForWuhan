@@ -222,7 +222,7 @@ class DetailActivity : AppCompatActivity() {
             while (retry > 0 && success.not()) {
                 try {
                     val host =
-                        "http://bus.wuhancloud.cn:9087/website//web/420100/line/${lineId}.do?Type=LineDetail"
+                        "http://real-time-bus.whgjzt.com:9087/website//web/420100/line/${lineId}.do?Type=LineDetail"
                     Http().apply {
                         this.setGet(host)
                         this.run()

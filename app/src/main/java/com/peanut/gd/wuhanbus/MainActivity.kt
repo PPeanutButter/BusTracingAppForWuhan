@@ -69,7 +69,7 @@ class MainActivity : AppCompatActivity() {
             while (retry > 0 && success.not()) {
                 try {
                     val host =
-                        "http://bus.wuhancloud.cn:9087/website//web/420100/search.do?keyword=$search&type=line"
+                        "http://real-time-bus.whgjzt.com:9087/website//web/420100/search.do?keyword=$search&type=line"
                     Http().apply {
                         this.setGet(host)
                         this.run()
